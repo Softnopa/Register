@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<div class="login-container">
+    <div class="tabs">
+        <button class="tab-btn js-login-tab active" type="button">Login</button>
+        <button class="tab-btn js-register-tab" type="button">Register</button>
+    </div>
+
+    <h2 class="js-title">Welcome Back</h2>
+
+    <form class="js-login-form">
+        <div class="input-group">
+            <input type="text" class="js-username" placeholder="Username" required>
+        </div>
+
+        <div class="input-group">
+            <input type="password" class="js-password" placeholder="Password" required>
+        </div>
+
+        <button type="submit">Login</button>
+        <p class="js-message"></p>
+    </form>
+
+    <form class="js-register-form hidden">
+        <div class="input-group">
+            <input type="text" class="js-register-username" placeholder="Username" required>
+        </div>
+
+        <div class="input-group">
+            <input type="password" class="js-register-password" placeholder="Password" required>
+        </div>
+
+        <button type="submit">Register</button>
+        <p class="js-register-message"></p>
+    </form>
+</div>
+
+<script src="main.js"></script>
+
+</body>
+</html>

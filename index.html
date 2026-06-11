@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #eee;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .logout {
+            background: red;
+            color: white;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <button class="logout" onclick="logout()">Logout</button>
+
+        <h2>Mening Todo Ro'yxatim</h2>
+
+        <div class="input-group">
+            <input type="text" id="todoInput" placeholder="Yangi todo qo'shing...">
+
+            <button onclick="addTodo()">Qo'shish</button>
+        </div>
+
+        <ul id="todoList"></ul>
+
+    </div>
+
+    <script>
+        const API_URL = location.hostname === "127.0.0.1" || location.hostname === "localhost"
+            ? "http://127.0.0.1:5000"
+            : "";
+
+        const TOKEN = localStorage.getItem("token");
+
+        if (!TOKEN) {
+            window.location.href = "login.html";
+        }
+
+        async function getTodos() {
+            try {
+                const response = await fetch(`${API_URL}/api/todos`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    }
+                });
+
+                const todos = await response.json();
+
+                displayTodos(todos);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function displayTodos(todos) {
+            const todoList = document.getElementById("todoList");
+
+            todoList.innerHTML = "";
+
+            todos.forEach(todo => {
+                const li = document.createElement("li");
+
+                li.textContent = todo.title;
+
+                todoList.appendChild(li);
+            });
+        }
+
+        async function addTodo() {
+            const input = document.getElementById("todoInput");
+            const title = input.value.trim();
+
+            if (!title) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/todos`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        title: title
+                    })
+                });
+
+                const data = await response.json();
+
+                console.log(data);
+
+                input.value = "";
+
+                getTodos();
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+
+        window.onload = getTodos;
+    </script>
+
+</body>
+
+</html>
